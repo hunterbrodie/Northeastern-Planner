@@ -1,0 +1,6 @@
+scrape-neu-courses/debug/
+scrape-neu-courses/target/
+scrape-neu-courses/Cargo.lock
+schedule-rest-api/debug/
+schedule-rest-api/target/
+schedule-rest-api/Cargo.lock
