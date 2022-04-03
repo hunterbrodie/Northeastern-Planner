@@ -1,6 +1,38 @@
 scrape-neu-courses/debug/
 scrape-neu-courses/target/
 scrape-neu-courses/Cargo.lock
-schedule-rest-api/debug/
-schedule-rest-api/target/
-schedule-rest-api/Cargo.lock
+insert-classes.sql
+
+neu-course-api/HELP.md
+neu-course-api/target/
+neu-course-api/!.mvn/wrapper/maven-wrapper.jar
+neu-course-api/!**/src/main/**/target/
+neu-course-api/!**/src/test/**/target/
+
+### STS ###
+neu-course-api/.apt_generated
+neu-course-api/.classpath
+neu-course-api/.factorypath
+neu-course-api/.project
+neu-course-api/.settings
+neu-course-api/.springBeans
+neu-course-api/.sts4-cache
+
+### IntelliJ IDEA ###
+neu-course-api/.idea
+neu-course-api/*.iws
+neu-course-api/*.iml
+neu-course-api/*.ipr
+
+### NetBeans ###
+neu-course-api//nbproject/private/
+neu-course-api//nbbuild/
+neu-course-api//dist/
+neu-course-api//nbdist/
+neu-course-api//.nb-gradle/
+neu-course-api/build/
+neu-course-api/!**/src/main/**/build/
+neu-course-api/!**/src/test/**/build/
+
+### VS Code ###
+neu-course-api/.vscode/

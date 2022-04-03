@@ -2,17 +2,13 @@ use select::document::Document;
 use select::predicate::{Attr, Class, Name, Predicate};
 use std::fs::File;
 use std::io::prelude::*;
+use std::env;
 
 struct NEUCourse {
 	crn: String,
 	name: String,
 	nupath: Vec<String>,
 	credits: u32,
-}
-
-struct NEUReq {
-	crn: String,
-	group: u32
 }
 
 fn main() {
@@ -35,7 +31,7 @@ fn scrape_courses() {
 		result.push_str("\n\n");
 	}
 
-	save(result).unwrap();
+	save(result, "insert-classes.sql".to_owned()).unwrap();
 }
 
 fn scrape_course_links() -> Vec<String> {
@@ -147,27 +143,45 @@ fn scrape_course_page(link: String) -> Vec<NEUCourse> {
 	course_list
 }
 
-fn make_query(c: NEUCourse) -> String {
-	if c.nupath.len() > 0 {
-		let mut cols = String::new();
+fn make_query(course: NEUCourse) -> String {
+	if course.nupath.len() > 0 {
+		let cols = vec![
+			"nd",
+			"ei",
+			"ic",
+			"fq",
+			"si",
+			"ad",
+			"dd",
+			"er",
+			"wf",
+			"wi",
+			"wd",
+			"ex",
+			"ce"];
 		let mut vals = String::new();
-		for req in c.nupath {
-			cols.push_str(&format!("{}, ", &req));
-			vals.push_str("1, ");
+		for c in cols {
+			if course.nupath.contains(&c.to_owned()) {
+				vals.push_str("1, ");
+			}
+			else {
+				vals.push_str("0, ");
+			}
 		}
-		cols = String::from(cols.trim_end_matches(", "));
 		vals = String::from(vals.trim_end_matches(", "));
 
-		format!("INSERT INTO nupath ({})\nVALUES ({});\nINSERT INTO classes (crn, name, fk_id_nupath, credits)\nVALUES(\'{}\', \'{}\', SCOPE_IDENTITY(), {});",
-			&cols, &vals, c.crn, c.name, c.credits)
+		format!("INSERT INTO course (crn, name, fk_id_nupath, credits)\nVALUES(\'{}\', \'{}\', GetNUPathID({}), {});", course.crn, course.name, vals,course.credits)
 	}
 	else {
-		format!("INSERT INTO classes (crn, name, credits)\nVALUES(\'{}\', \'{}\', {});", c.crn, c.name, c.credits)
+		format!("INSERT INTO course (crn, name, credits)\nVALUES(\'{}\', \'{}\', {});", course.crn, course.name, course.credits)
 	}
 }
 
-fn save(str: String) -> std::io::Result<()> {
-    let mut file = File::create("classes.sql")?;
+fn save(str: String, file_name: String) -> std::io::Result<()> {
+	let mut path = env::current_dir()?;
+	path.pop();
+	path.push(file_name);
+    let mut file = File::create(path)?;
     file.write_all(str.as_bytes())?;
     Ok(())
 }
