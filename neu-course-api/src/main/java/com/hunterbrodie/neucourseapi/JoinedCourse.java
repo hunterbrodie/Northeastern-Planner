@@ -22,7 +22,7 @@ public class JoinedCourse {
     return this.name;
   }
 
-  public List<String> getFk_id_nupath() {
+  public List<String> getNupath() {
     return this.nupath;
   }
 
