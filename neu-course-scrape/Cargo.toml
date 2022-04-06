@@ -1,5 +1,5 @@
 [package]
-name = "scrape-neu-courses"
+name = "neu-course-scrape"
 version = "0.1.0"
 edition = "2021"
 

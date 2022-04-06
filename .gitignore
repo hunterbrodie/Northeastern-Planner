@@ -1,6 +1,6 @@
-scrape-neu-courses/debug/
-scrape-neu-courses/target/
-scrape-neu-courses/Cargo.lock
+neu-course-scrape/debug/
+neu-course-scrape/target/
+neu-course-scrape/Cargo.lock
 insert-classes.sql
 
 neu-course-api/HELP.md

@@ -1,7 +1,7 @@
 DELIMITER //
 
 CREATE FUNCTION GetNUPathId ( ndArg BOOL, eiArg BOOL, icArg BOOL, fqArg BOOL, siArg BOOL, adArg BOOL,
-    ddArg BOOL, erArg BOOL, wfArg BOOL, wiArg BOOL, wdArg BOOL, exArg BOOL, ceArg BOOL) RETURNS INT
+    ddArg BOOL, erArg BOOL, wfArg BOOL, wiArg BOOL, wdArg BOOL, exArg BOOL, ceArg BOOL) RETURNS INT DETERMINISTIC
 
 BEGIN
     SET @fk_id = NULL;
