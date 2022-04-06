@@ -36,7 +36,6 @@ public class MainController {
       //return new ResponseEntity<>(courseData.get(), HttpStatus.OK);
       Course foundCourse = courseData.get();
 
-
       List<String> nupaths = new ArrayList<>();
 
       if (foundCourse.getFk_id_nupath() != null) {
