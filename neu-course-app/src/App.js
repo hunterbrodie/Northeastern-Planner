@@ -59,7 +59,7 @@ class Semester extends React.Component {
 	}
 
 	fetchData = (crn) => {
-		fetch('https://api.hunterbrodie.com:8443/get/course/' + crn)
+		fetch('https://api.huskyplan.com:8443/get/course/' + crn)
 			.then(response => response.json())
 			.then(data => this.populateCourse(data));
 	}
