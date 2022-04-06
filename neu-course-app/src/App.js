@@ -240,6 +240,11 @@ class Page extends React.Component {
 		};
 	}
 
+	loadFile = (e) => {
+		const fileInput = document.getElementById("file-input");
+		fileInput.click();
+	}
+
 	handleFileLoad = (evt) => {
 		this.instantiatePlan(JSON.parse(evt.target.result));
 	};
@@ -259,7 +264,7 @@ class Page extends React.Component {
 				<header className="App-header">
 					<h2>NEU Course Planner</h2>
 				</header>
-				<div>
+				<div className='App-data'>
 					{this.state.years}
 				</div>
 				<footer className='App-footer'>
@@ -277,7 +282,8 @@ class Page extends React.Component {
 					</div>
 					<div>
 						<button className='semester-header-button' onClick={this.savePlan} type="button">Save Plan</button>
-						<input className='semester-header-button' id='file-input' type='file' onChange={this.loadPlan} />
+						<button className='semester-header-button' onClick={this.loadFile} type="button">Load Plan</button>
+						<input hidden className='semester-header-button' id='file-input' type='file' onChange={this.loadPlan} />
 					</div>
 				</footer>
 			</div>

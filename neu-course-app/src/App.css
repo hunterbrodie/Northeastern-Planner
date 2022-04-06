@@ -1,42 +1,61 @@
+/*:root {
+	--bg: #3c3836;
+	--header-footer-bg: #282828;
+	--light-bg: #f9f5d7;
+	--fg: #ebdbb2;
+}*/
+
+:root {
+	--bg: #24283b;
+	--header-footer-bg: #1a1b26;
+	--light-bg: #a9b1d6;
+	--fg: #a9b1d6;
+}
+
 .App {
   text-align: center;
-  padding: 0px 20px 20px 20px;
-  background-color: #282c34;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: var(--header-footer-bg);
   display: flex;
   flex-direction: column;
   text-align: left;
   align-items: left;
   justify-content: center;
   padding-left: 2%;
-  color: white;
+  color: var(--fg);
   position: sticky;
   top: 0;
+  padding: 0px 20px 0px 20px;
 }
 
 .App-footer {
-  background-color: #282c34;
+  background-color: var(--header-footer-bg);
   display: flex;
   justify-content: space-between;
   padding-left: 2%;
-  color: white;
+  color: var(--fg);
   position: sticky;
   bottom: 0;
+  padding: 0px 20px 0px 20px;
+}
+
+.App-data {
+	background-color: var(--bg);
+	padding: 0px 20px 20px 20px;
 }
 
 .grid-container {
 	display: grid;
 	grid-template-columns: 2fr 5fr 2fr 1fr;
-	background-color: #282c34;
+	background-color: var(--bg);
 	padding: 0px;
 }
 .grid-item {
-	background-color: rgba(255, 255, 255, 0.8);
+	background-color: var(--light-bg);
 	border: 1px solid rgba(0, 0, 0, 0.8);
-	color: black;
+	color: var(--bg);
 	padding: 10px;
 	font-size: 16px;
 	text-align: center;
@@ -45,7 +64,7 @@
 .credit-total-container {
 	display: grid;
 	grid-template-columns: 9fr 1fr;
-	background-color: #282c34;
+	background-color: var(--bg);
 	padding: 0px;
 }
 
@@ -59,19 +78,21 @@
 	margin-bottom: 20px;
 	margin-left: 10px;
 	margin-right: 10px;
+	background-color: var(--light-bg);
+	border-radius: 4px;
 }
 
 .flex-container {
   display: flex;
   text-align: left;
   align-items: left;
-  background-color: #282c34;
-  color: white;
+  background-color: var(--bg);
+  color: var(--fg);
 }
 
 .flex-child {
   flex: 1;
-  background-color: #282c34;
+  background-color: var(--bg);
   margin-left: 20px;
 }
 
@@ -81,7 +102,7 @@
 
 h4 a {
     text-decoration:none;
-    color:#ffffff;
+    color:var(--fg);
 }
 
 .links {
