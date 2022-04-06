@@ -39,8 +39,6 @@ public class MainController {
 
       List<String> nupaths = new ArrayList<>();
 
-      System.out.println(foundCourse.getFk_id_nupath());
-
       if (foundCourse.getFk_id_nupath() != null) {
         Optional<NUPath> nupathData = nupathRepository.findById(foundCourse.getFk_id_nupath());
         if (nupathData.isPresent()) {
