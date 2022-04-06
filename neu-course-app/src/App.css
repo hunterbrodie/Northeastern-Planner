@@ -78,3 +78,20 @@
 .flex-child:first-child {
   margin-left: 0px;
 }
+
+h4 a {
+    text-decoration:none;
+    color:#ffffff;
+}
+
+.links {
+	display: flex;
+	flex-direction: row;
+}
+
+.link {
+	margin-left: 40px;
+}
+.link:first-child {
+	margin-left: 0px;
+}

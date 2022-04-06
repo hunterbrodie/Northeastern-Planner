@@ -164,9 +164,25 @@ class Page extends React.Component {
 		years: []
 	}
 
-  componentDidMount(){
-    document.title = "NEU Course Planner"
-  }
+	constructor(props) {
+		super(props);
+
+		var blankYears = [];
+		blankYears.push(<Year key='1' year='1' loadData={[]} passToParent={this.loadToParent} />);
+		blankYears.push(<Year key='2' year='2' loadData={[]} passToParent={this.loadToParent} />);
+		blankYears.push(<Year key='3' year='3' loadData={[]} passToParent={this.loadToParent} />);
+		blankYears.push(<Year key='4' year='4' loadData={[]} passToParent={this.loadToParent} />);
+		blankYears.push(<Year key='5' year='5' loadData={[]} passToParent={this.loadToParent} />);
+
+		this.state = {
+			data: [],
+			years: blankYears
+		}
+	}
+
+	componentDidMount() {
+		document.title = "NEU Course Planner"
+	}
 
 	instantiatePlan = (d) => {
 		if (d === null) {
@@ -247,9 +263,19 @@ class Page extends React.Component {
 					{this.state.years}
 				</div>
 				<footer className='App-footer'>
-					<h4>hunterbrodie.com</h4>
+					<div className='links'>
+					<h4 className='link'>
+						<a href='https://hunterbrodie.com' target="_blank" rel="noreferrer">
+							hunterbrodie.com
+						</a>
+					</h4>
+					<h4 className='link'>
+						<a href='https://gitlab.com/hunterbrodie/northeastern-planner' target="_blank" rel="noreferrer">
+							gitlab
+						</a>
+					</h4>
+					</div>
 					<div>
-						<button className='semester-header-button' onClick={this.instantiatePlan} type="button">New Plan</button>
 						<button className='semester-header-button' onClick={this.savePlan} type="button">Save Plan</button>
 						<input className='semester-header-button' id='file-input' type='file' onChange={this.loadPlan} />
 					</div>
