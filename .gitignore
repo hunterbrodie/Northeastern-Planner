@@ -2,6 +2,8 @@ neu-course-scrape/debug/
 neu-course-scrape/target/
 neu-course-scrape/Cargo.lock
 insert-classes.sql
+insert-coreqs.sql
+insert-prereqs.sql
 
 neu-course-api/HELP.md
 neu-course-api/target/

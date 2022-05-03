@@ -112,9 +112,9 @@ class Semester extends React.Component {
 			<div className="flex-child">
 				<div className='semester-header'>
 					<h3>{this.getName()}</h3>
-					<div>
-						<button className='semester-header-button' onClick={this.addCourse} type="button">Add Course</button>
-						<button className='semester-header-button' onClick={this.removeCourse} type="button">Remove Course</button>
+					<div className='buttons-div'>
+						<button className='ghost-button-sem' onClick={this.addCourse} type="button">Add Course</button>
+						<button className='ghost-button-sem' onClick={this.removeCourse} type="button">Remove Course</button>
 					</div>
 				</div>
 				<div>
@@ -161,7 +161,8 @@ class Year extends React.Component {
 class Page extends React.Component {
 	state = {
 		data: [],
-		years: []
+		years: [],
+		selectedTab: 0
 	}
 
 	constructor(props) {
@@ -176,7 +177,8 @@ class Page extends React.Component {
 
 		this.state = {
 			data: [],
-			years: blankYears
+			years: blankYears,
+			selectedTab: 0
 		}
 	}
 
@@ -258,32 +260,126 @@ class Page extends React.Component {
 		element.click();
 	}
 
+	switchTab = (id) => {
+		switch (id) {
+			case 0:
+				this.setState({
+					data: this.state.data,
+					years: this.state.years,
+					selectedTab: 0
+				});
+				break;
+			case 1:
+				this.setState({
+					data: this.state.data,
+					years: this.state.years,
+					selectedTab: 1
+				});
+				break;
+			default:
+				break;
+		}
+	}
+
 	render() {
 		return (
 			<div className="App">
 				<header className="App-header">
 					<h2>NEU Course Planner</h2>
+					<div className='buttons-div'>
+						<button onClick={(e) => this.switchTab(0)} className={this.state.selectedTab === 0 ? 'tab-button-selected' : 'tab-button'}>Planner</button>
+						<button onClick={(e) => this.switchTab(1)} className={this.state.selectedTab === 1 ? 'tab-button-selected' : 'tab-button'}>Course Search</button>
+					</div>
 				</header>
 				<div className='App-data'>
-					{this.state.years}
+					{this.state.selectedTab === 0 ? this.state.years : null}
+				</div>
+				<div className='App-data'>
+					{this.state.selectedTab === 1 ?
+						<div className='search-page'>
+							<div className='search-options'>
+								<h3>NUPath</h3>
+								<div className='checkbox-options'>
+									<div>
+										<input type="checkbox" id="nd" />
+										<label for="nd">ND</label><br></br>
+									</div>
+
+									<div>
+										<input type="checkbox" id="ei" />
+										<label for="ei">EI</label><br></br>
+									</div>
+
+									<div>
+										<input type="checkbox" id="ic" />
+										<label for="ic">IC</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="fq" />
+										<label for="fq">FQ</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="si" />
+										<label for="si">SI</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="ad" />
+										<label for="ad">AD</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="dd" />
+										<label for="dd">DD</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="er" />
+										<label for="er">ER</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="wf" />
+										<label for="wf">WF</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="wi" />
+										<label for="wi">WI</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="wd" />
+										<label for="wd">WD</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="ex" />
+										<label for="ex">EX</label><br></br>
+									</div>
+									<div>
+										<input type="checkbox" id="ce" />
+										<label for="ce">CE</label><br></br>
+									</div>
+								</div>
+							</div>
+							<div className='search-bar'>
+								<h3 className='search-bar-child'>Search Courses:</h3>
+								<input className='search-bar-child' type='text' />
+								<button className='ghost-button-sem search-bar-child'>Search!</button>
+							</div>
+						</div> : null}
 				</div>
 				<footer className='App-footer'>
 					<div className='links'>
-					<h4 className='link'>
-						<a href='https://hunterbrodie.com' target="_blank" rel="noreferrer">
-							hunterbrodie.com
-						</a>
-					</h4>
-					<h4 className='link'>
-						<a href='https://gitlab.com/hunterbrodie/northeastern-planner' target="_blank" rel="noreferrer">
-							gitlab
-						</a>
-					</h4>
+						<h4 className='link'>
+							<a href='https://hunterbrodie.com' target="_blank" rel="noreferrer">
+								hunterbrodie.com
+							</a>
+						</h4>
+						<h4 className='link'>
+							<a href='https://gitlab.com/hunterbrodie/northeastern-planner' target="_blank" rel="noreferrer">
+								gitlab
+							</a>
+						</h4>
 					</div>
-					<div>
-						<button className='semester-header-button' onClick={this.savePlan} type="button">Save Plan</button>
-						<button className='semester-header-button' onClick={this.loadFile} type="button">Load Plan</button>
-						<input hidden className='semester-header-button' id='file-input' type='file' onChange={this.loadPlan} />
+					<div className='buttons-div'>
+						<button className='ghost-button' onClick={this.savePlan} type="button">Save Plan</button>
+						<button className='ghost-button' onClick={this.loadFile} type="button">Load Plan</button>
+						<input hidden id='file-input' type='file' onChange={this.loadPlan} />
 					</div>
 				</footer>
 			</div>

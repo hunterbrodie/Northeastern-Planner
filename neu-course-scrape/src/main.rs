@@ -7,6 +7,9 @@ use std::env;
 struct NEUCourse {
 	crn: String,
 	name: String,
+	desc: String,
+	prereq: Vec<Vec<String>>,
+	coreq: Vec<Vec<String>>,
 	nupath: Vec<String>,
 	credits: u32,
 }
@@ -24,14 +27,34 @@ fn scrape_courses() {
 		courses.append(&mut scrape_course_page(link));
 	}
 
-	let mut result = String::new();
+	let mut course_query = String::new();
 	
-	for course in courses {
-		result.push_str(&make_query(course));
-		result.push_str("\n\n");
+	for course in &courses {
+		course_query.push_str(&insert_course_query(course));
+		course_query.push_str("\n\n");
 	}
 
-	save(result, "insert-classes.sql".to_owned()).unwrap();
+	save(course_query, "insert-classes.sql".to_owned()).unwrap();
+
+	let mut coreqs = String::from("INSERT INTO coreqs (fk_req, fk_class, group_id)\nVALUES\n");
+
+	for course in &courses {
+		coreqs.push_str(&insert_req_query(&course.coreq, &course.crn));
+	}
+	coreqs = String::from(coreqs.trim_end_matches(","));
+	coreqs.push_str(";");
+
+	save(coreqs, "insert-coreqs.sql".to_owned()).unwrap();
+
+	let mut prereqs = String::from("INSERT INTO coreqs (fk_req, fk_class, group_id)\nVALUES\n");
+
+	for course in &courses {
+		prereqs.push_str(&insert_req_query(&course.prereq, &course.crn));
+	}
+	prereqs = String::from(prereqs.trim_end_matches(","));
+	prereqs.push_str(";");
+
+	save(prereqs, "insert-prereqs.sql".to_owned()).unwrap();
 }
 
 fn scrape_course_links() -> Vec<String> {
@@ -99,7 +122,11 @@ fn scrape_course_page(link: String) -> Vec<NEUCourse> {
 
 		let course_name = course_name.trim_end_matches(". ").replace("'", "''");
 
+		let desc = class_node.find(Class("cb_desc")).next().unwrap().text().trim().replace("'", "''");
+
 		let mut nupaths: Vec<Option<String>> = Vec::new();
+		let mut coreqs: Vec<Vec<String>> = Vec::new();
+		let mut prereqs: Vec<Vec<String>> = Vec::new();
 
 		for attribute_node in class_node.find(Class("courseblockextra")) {
 			let attribute = attribute_node.text();
@@ -126,6 +153,40 @@ fn scrape_course_page(link: String) -> Vec<NEUCourse> {
 					});
 				}
 			}
+			else if attribute.contains("Corequisite(s):") {
+				let attribute = String::from(attribute.trim_start_matches("Corequisite(s): "));
+				for c in attribute.split("; ") {
+					let mut reqs: Vec<String> = Vec::new();
+					if c.contains("or") {
+						for or_req in c.split("or ") {
+							let mut or_req_it = or_req.trim_start_matches("(").split_whitespace().take(2);
+							reqs.push(format!("{} {}", or_req_it.next().unwrap(), or_req_it.next().unwrap()));
+						}
+					}
+					else {
+						let mut or_req_it = c.split_whitespace().take(2);
+						reqs.push(format!("{} {}", or_req_it.next().unwrap(), or_req_it.next().unwrap()));
+					}
+					coreqs.push(reqs);
+				}
+			}
+			else if attribute.contains("Prerequisite(s):") {
+				let attribute = String::from(attribute.trim_start_matches("Prerequisite(s): "));
+				for c in attribute.split("; ") {
+					let mut reqs: Vec<String> = Vec::new();
+					if c.contains("or") {
+						for or_req in c.split("or ") {
+							let mut or_req_it = or_req.trim_start_matches("(").split_whitespace().take(2);
+							reqs.push(format!("{} {}", or_req_it.next().unwrap(), or_req_it.next().unwrap()));
+						}
+					}
+					else {
+						let mut or_req_it = c.split_whitespace().take(2);
+						reqs.push(format!("{} {}", or_req_it.next().unwrap(), or_req_it.next().unwrap()));
+					}
+					prereqs.push(reqs);
+				}
+			}
 		}
 
 		nupaths.retain(|x| x.is_some());
@@ -135,6 +196,9 @@ fn scrape_course_page(link: String) -> Vec<NEUCourse> {
 		course_list.push(NEUCourse {
 			crn: String::from(course_number),
 			name: String::from(course_name),
+			desc: desc,
+			coreq: coreqs,
+			prereq: prereqs,
 			nupath: nupaths,
 			credits: credit_hours
 		})
@@ -143,7 +207,7 @@ fn scrape_course_page(link: String) -> Vec<NEUCourse> {
 	course_list
 }
 
-fn make_query(course: NEUCourse) -> String {
+fn insert_course_query(course: &NEUCourse) -> String {
 	if course.nupath.len() > 0 {
 		let cols = vec![
 			"nd",
@@ -170,11 +234,25 @@ fn make_query(course: NEUCourse) -> String {
 		}
 		vals = String::from(vals.trim_end_matches(", "));
 
-		format!("INSERT INTO course (crn, name, fk_id_nupath, credits)\nVALUES(\'{}\', \'{}\', GetNUPathID({}), {});", course.crn, course.name, vals,course.credits)
+		format!("INSERT INTO course (crn, name, description, fk_id_nupath, credits)\nVALUES(\'{}\', \'{}\', \'{}\', GetNUPathID({}), {});", course.crn, course.name, course.desc, vals, course.credits)
 	}
 	else {
-		format!("INSERT INTO course (crn, name, credits)\nVALUES(\'{}\', \'{}\', {});", course.crn, course.name, course.credits)
+		format!("INSERT INTO course (crn, name, description, credits)\nVALUES(\'{}\', \'{}\', \'{}\', {});", course.crn, course.name, course.desc, course.credits)
 	}
+}
+
+fn insert_req_query(reqs: &Vec<Vec<String>>, class: &String) -> String {
+	if reqs.len() > 0 {
+		let mut values = String::new();
+		for i in 0..reqs.len() {
+			for r in reqs[i].iter() {
+				values.push_str(&format!("('{}', '{}', {}),", r, class, i + 1));
+			}
+		}
+		values.push_str("\n");
+		return values;
+	}
+	return String::new();
 }
 
 fn save(str: String, file_name: String) -> std::io::Result<()> {
