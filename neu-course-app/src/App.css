@@ -116,3 +116,18 @@ h4 a {
 .link:first-child {
 	margin-left: 0px;
 }
+
+.year-header {
+	display: flex;
+	justify-content: space-between;
+    color:var(--fg);
+	padding: 0px;
+	margin: 0px;
+}
+
+.year-header h3 {
+	display: flex;
+	justify-content: space-between;
+    color:var(--fg);
+	margin-bottom: 0px;
+}

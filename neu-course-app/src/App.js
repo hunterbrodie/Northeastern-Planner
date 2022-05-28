@@ -111,7 +111,7 @@ class Semester extends React.Component {
 		return (
 			<div className="flex-child">
 				<div className='semester-header'>
-					<h3>{this.getName()}</h3>
+					<h4>{this.getName()}</h4>
 					<div>
 						<button className='semester-header-button' onClick={this.addCourse} type="button">Add Course</button>
 						<button className='semester-header-button' onClick={this.removeCourse} type="button">Remove Course</button>
@@ -139,19 +139,34 @@ class Semester extends React.Component {
 
 class Year extends React.Component {
 	state = {
-		data: []
+		data: [],
+		hidden: false
+	}
+
+	toggleShow = () => {
+		this.setState({
+			data: this.state.data,
+			hidden: !this.state.hidden
+		})
 	}
 
 	render() {
 		return (
 			<div>
-				<div className='flex-container'>
-					<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='0' />
-					<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='1' />
+				<div class='year-header'>
+					<h3>Year {this.props.year}</h3>
+					<button className='semester-header-button' onClick={this.toggleShow} type="button">{this.state.hidden ? 'Show' : 'Hide'}</button>
 				</div>
-				<div className='flex-container'>
-					<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='2' />
-					<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='3' />
+				<hr></hr>
+				<div hidden={this.state.hidden}>
+					<div className='flex-container' >
+						<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='0' />
+						<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='1' />
+					</div>
+					<div className='flex-container'>
+						<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='2' />
+						<Semester loadData={this.props.loadData} passToParent={this.props.passToParent} year={this.props.year} semester='3' />
+					</div>
 				</div>
 			</div>
 		)
@@ -269,16 +284,16 @@ class Page extends React.Component {
 				</div>
 				<footer className='App-footer'>
 					<div className='links'>
-					<h4 className='link'>
-						<a href='https://hunterbrodie.com' target="_blank" rel="noreferrer">
-							hunterbrodie.com
-						</a>
-					</h4>
-					<h4 className='link'>
-						<a href='https://gitlab.com/hunterbrodie/northeastern-planner' target="_blank" rel="noreferrer">
-							gitlab
-						</a>
-					</h4>
+						<h4 className='link'>
+							<a href='https://hunterbrodie.com' target="_blank" rel="noreferrer">
+								hunterbrodie.com
+							</a>
+						</h4>
+						<h4 className='link'>
+							<a href='https://gitlab.com/hunterbrodie/northeastern-planner' target="_blank" rel="noreferrer">
+								gitlab
+							</a>
+						</h4>
 					</div>
 					<div>
 						<button className='semester-header-button' onClick={this.savePlan} type="button">Save Plan</button>
