@@ -15,6 +15,14 @@ class Row extends React.Component {
 	}
 }
 
+class CoopRow extends React.Component {
+	render() {
+		return (
+			<div className="coop">Coop</div>
+		);
+	}
+}
+
 class Semester extends React.Component {
 	state = {
 		rows: [],
@@ -53,8 +61,13 @@ class Semester extends React.Component {
 	addCourse = (e) => {
 		const courseNumber = prompt('Course Number:');
 
-		if (!this.state.crns.includes(courseNumber)) {
-			this.fetchData(courseNumber);
+		if (this.state.crns.length === 0 && courseNumber === 'Coop') {
+			this.state.rows.push(<CoopRow />);
+			this.sendDataUp(courseNumber, false);
+			this.updateStateVars();
+		}
+		else if (!this.state.crns.includes('Coop') && !this.state.crns.includes(courseNumber)) {
+			this.fetchData(courseNumber.toUpperCase());
 		}
 	}
 
@@ -78,13 +91,23 @@ class Semester extends React.Component {
 		const courseNumber = prompt('Course Number:');
 
 		if (this.state.crns.includes(courseNumber)) {
-			for (var i = 0; i < this.state.crns.length; i++) {
-				if (this.state.crns[i] === courseNumber) {
-					this.state.crns.splice(i, 1);
-					this.sendDataUp(courseNumber, true);
-				}
-				if (this.state.rows[i].props.crn === courseNumber) {
-					this.state.rows.splice(i, 1);
+			if (courseNumber === 'Coop') {
+				this.sendDataUp(courseNumber, true);
+				this.setState({
+					rows: [],
+					crns: [],
+					credits: 0
+				});
+			}
+			else {
+				for (var i = 0; i < this.state.crns.length; i++) {
+					if (this.state.crns[i] === courseNumber) {
+						this.state.crns.splice(i, 1);
+						this.sendDataUp(courseNumber, true);
+					}
+					if (this.state.rows[i].props.crn === courseNumber) {
+						this.state.rows.splice(i, 1);
+					}
 				}
 			}
 		}
@@ -107,6 +130,18 @@ class Semester extends React.Component {
 		});
 	}
 
+	reset = () => {
+		for (var i = 0; i < this.state.crns.length; i++) {
+			this.sendDataUp(this.state.crns[i], true);
+		}
+
+		this.setState({
+			rows: [],
+			crns: [],
+			credits: 0
+		})
+	}
+
 	render() {
 		return (
 			<div className="flex-child">
@@ -115,6 +150,7 @@ class Semester extends React.Component {
 					<div>
 						<button className='semester-header-button' onClick={this.addCourse} type="button">Add Course</button>
 						<button className='semester-header-button' onClick={this.removeCourse} type="button">Remove Course</button>
+						<button className='semester-header-button' onClick={this.reset} type="button">Reset Semester</button>
 					</div>
 				</div>
 				<div>
